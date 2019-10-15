@@ -5,6 +5,10 @@ const routes: Routes = [
   {
     path: '',
     loadChildren: () => import('./tabs/tabs.module').then(m => m.TabsPageModule)
+  },
+  {
+    path: 'editnote',
+    loadChildren: './editnote/editnote.module#EditnotePageModule'
   }
 ];
 @NgModule({

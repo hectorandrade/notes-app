@@ -1,0 +1,31 @@
+<ion-header no-border>
+  <ion-toolbar>
+    <ion-title>
+      Notes
+    </ion-title>
+  </ion-toolbar>
+  <ion-searchbar animated (ionChange)="search($event)"></ion-searchbar>
+</ion-header>
+<ion-content>
+  <ion-list>
+    <ion-reorder-group [disabled]="false" (ionItemReorder)="reorder($event)">
+      <ion-item
+        *ngFor="let note of dataLocalService.savedNotes | filter: searchText"
+        detail
+        routerLink="/editnote"
+        (press)="presentActionSheet()"
+      >
+        <ion-reorder slot="start"></ion-reorder>
+        <ion-label>
+          <h3>{{ note.title }}</h3>
+          <p>{{ note.description }}</p>
+        </ion-label>
+      </ion-item>
+    </ion-reorder-group>
+  </ion-list>
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button routerLink="/editnote">
+      <ion-icon name="add"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
