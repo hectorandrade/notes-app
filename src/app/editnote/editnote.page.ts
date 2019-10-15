@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DataLocalService } from '../services/data-local.service';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-editnote',
@@ -7,6 +8,7 @@ import { DataLocalService } from '../services/data-local.service';
   styleUrls: ['./editnote.page.scss']
 })
 export class EditnotePage implements OnInit {
+  titlePage = 'Create Note';
   isReminder = false;
 
   note = {
@@ -16,7 +18,22 @@ export class EditnotePage implements OnInit {
     timeReminder: ''
   };
 
-  constructor(private dataLocalService: DataLocalService) {}
+  constructor(
+    private dataLocalService: DataLocalService,
+    private route: ActivatedRoute,
+    private router: Router
+  ) {
+    this.route.queryParams.subscribe(params => {
+      if (this.router.getCurrentNavigation().extras.state) {
+        this.note = this.router.getCurrentNavigation().extras.state.note;
+        const isUpdate = this.router.getCurrentNavigation().extras.state
+          .isUpdate;
+        if (isUpdate) {
+          this.titlePage = 'Modify Note';
+        }
+      }
+    });
+  }
 
   ngOnInit() {}
 

@@ -9,18 +9,29 @@
 <ion-content>
   <ion-list>
     <ion-reorder-group [disabled]="false" (ionItemReorder)="reorder($event)">
-      <ion-item
+      <ion-item-sliding
         *ngFor="let note of dataLocalService.savedNotes | filter: searchText"
-        detail
-        routerLink="/editnote"
-        (press)="presentActionSheet()"
       >
-        <ion-reorder slot="start"></ion-reorder>
-        <ion-label>
-          <h3>{{ note.title }}</h3>
-          <p>{{ note.description }}</p>
-        </ion-label>
-      </ion-item>
+        <ion-item
+          detail
+          (click)="redirectToNote(note)"
+          (press)="presentActionSheet(note)"
+        >
+          <ion-reorder slot="start"></ion-reorder>
+          <ion-label>
+            <h3>{{ note.title }}</h3>
+            <p>{{ note.description }}</p>
+          </ion-label>
+        </ion-item>
+        <ion-item-options side="end">
+          <ion-item-option (click)="archiveNote(note)">
+            <ion-icon slot="icon-only" name="archive"></ion-icon>
+          </ion-item-option>
+          <ion-item-option color="danger" (click)="deleteNote(note)">
+            <ion-icon slot="icon-only" name="trash"></ion-icon>
+          </ion-item-option>
+        </ion-item-options>
+      </ion-item-sliding>
     </ion-reorder-group>
   </ion-list>
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">

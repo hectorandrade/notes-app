@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Storage } from '@ionic/storage';
 import { Note } from '../notes/note';
-import { timingSafeEqual } from 'crypto';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -23,6 +23,16 @@ export class DataLocalService {
 
   async loadNotes() {
     const notesFound = await this.storage.get('notes');
-    this.savedNotes = notesFound;
+    if (notesFound) {
+      this.savedNotes = notesFound;
+    }
+  }
+
+  async deleteNote(note: Note) {
+    const indexNote = this.savedNotes.indexOf(note);
+    if (indexNote !== -1) {
+      this.savedNotes.splice(indexNote, 1);
+    }
+    this.storage.set('notes', this.savedNotes);
   }
 }

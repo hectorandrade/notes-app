@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, AlertController } from '@ionic/angular';
 import { Note } from './note';
 import { SocialSharing } from '@ionic-native/social-sharing/ngx';
 import { DataLocalService } from '../services/data-local.service';
+import { Router, NavigationExtras } from '@angular/router';
 
 @Component({
   selector: 'app-tab1',
@@ -16,7 +17,9 @@ export class Tab1Page {
   constructor(
     private actionSheetCtrl: ActionSheetController,
     private socialSharing: SocialSharing,
-    public dataLocalService: DataLocalService
+    public dataLocalService: DataLocalService,
+    private router: Router,
+    public alertController: AlertController
   ) {}
 
   search(event: any) {
@@ -27,9 +30,36 @@ export class Tab1Page {
     event.detail.complete();
   }
 
-  async presentActionSheet() {
+  redirectToNote(item: Note) {
+    const navigationExtras: NavigationExtras = {
+      state: {
+        note: item,
+        isUpdate: true
+      }
+    };
+    console.log(navigationExtras);
+    this.router.navigate(['editnote'], navigationExtras);
+  }
+
+  async archiveNote(item: Note) {
+    const alert = await this.alertController.create({
+      header: 'NOT AVAILABLE',
+      subHeader: 'This option will be enabled soon',
+      message:
+        'Sorry, for time issues we could not develop this part. But this one will be available soon.',
+      buttons: ['OK']
+    });
+
+    await alert.present();
+  }
+
+  deleteNote(note: Note) {
+    this.dataLocalService.deleteNote(note);
+  }
+
+  async presentActionSheet(item: Note) {
     const actionSheet = await this.actionSheetCtrl.create({
-      header: 'Albums',
+      header: 'Note Options',
       buttons: [
         {
           text: 'Delete',
@@ -37,7 +67,7 @@ export class Tab1Page {
           icon: 'trash',
           cssClass: 'red',
           handler: () => {
-            console.log('Delete clicked');
+            this.deleteNote(item);
           }
         },
         {
